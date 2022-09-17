@@ -8,6 +8,44 @@
     <artifactId>notification</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <properties>
+
+        <!-- Springdoc - OpenApi 3 -->
+        <springdoc.version>1.6.6</springdoc.version>
+        <swagger-annotations.version>2.1.13</swagger-annotations.version>
+        <swagger-annotations-v1.version>1.6.5</swagger-annotations-v1.version>
+
+        <!-- TESTS -->
+        <wiremock.version>2.32.0</wiremock.version>
+
+        <!-- TEST E2E -->
+        <spring-mock-mvc.version>5.0.0</spring-mock-mvc.version>
+
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
+        <spring-boot-dependencies.version>2.6.6</spring-boot-dependencies.version>
+        <spring-framework-bom.version>5.3.18</spring-framework-bom.version>
+
+        <!-- junit 5-->
+        <junit-bom.version>5.8.2</junit-bom.version>
+
+        <assertj.version>3.22.0</assertj.version>
+
+        <!-- Autres dépendances -->
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <hibernate-validator.version>6.2.3.Final</hibernate-validator.version>
+
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <commons-pool.version>2.11.1</commons-pool.version>
+        <!-- log4j -->
+        <log4j.version>2.17.2</log4j.version>
+        <!-- SLF4J -->
+        <org.slf4j.version>1.7.36</org.slf4j.version>
+        <validation-api.version>2.0.2</validation-api.version>
+
+    </properties>
     <modules>
         <module>api</module>
         <module>app</module>
@@ -15,9 +53,199 @@
         <module>infra</module>
     </modules>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties>
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- springdoc -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-data-rest</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-hateoas</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <!-- Squiggly -->
+            <dependency>
+                <groupId>com.github.bohnman</groupId>
+                <artifactId>squiggly-filter-jackson</artifactId>
+                <version>${squiggly-filter-jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+            </dependency>
+
+            <!-- openapi / swagger -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations-v1.version}</version>
+            </dependency>
+
+            <!-- TEST -->
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- TESTE2E: rest-assured -->
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>spring-mock-mvc</artifactId>
+                <version>${spring-mock-mvc.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Spring bom -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring-framework-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <type>pom</type>
+                <version>${spring-boot-dependencies.version}</version>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- junit bom -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- assertj-->
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${assertj.version}</version>
+            </dependency>
+
+            <!-- Apache commons -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool.version}</version>
+            </dependency>
+
+            <!-- log4j -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- org.slf4j -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+
+            <!-- jakarta.validation -->
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>{validation-api.version}</version>
+            </dependency>
+
+            <!-- hibernate validator-->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator-annotation-processor</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <!-- mapstruct -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+            <!-- Spring boot test -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>junit-vintage-engine</artifactId>
+                        <groupId>org.junit.vintage</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>objenesis</artifactId>
+                        <groupId>org.objenesis</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- Reflections -->
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jeasy</groupId>
+                <artifactId>easy-random-core</artifactId>
+                <version>${easy-random-core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>io.github.classgraph</groupId>
+                        <artifactId>classgraph</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>

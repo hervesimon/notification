@@ -1,0 +1,371 @@
+openapi: 3.0.1
+info:
+  title: amadeus-notification-api
+  version: '1.0'
+  description: 'This API manages the users registration, login and Trips creation and review.'
+  contact:
+    name: Hervé MULUDIKI
+    url: 'https://github.com/hervesimon/notification'
+    email: herve.muludiki@gmail.com
+servers:
+  - url: /api
+paths:
+  '/users/{username}/trips':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+        description: The unique identification of an user
+    get:
+      summary: Get User trips
+      responses:
+        '200':
+          description: Trips Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripResponse'
+        '403':
+          description: Forbidden
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-users-trips
+      description: Retrieve the trips information of the user with the matching user ID.
+      tags:
+        - Users
+        - Trips
+  '/users/{username}':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+    get:
+      summary: Get User Info by User ID
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '403':
+          description: Forbidden
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-users-by-userId
+      description: Retrieve the information of the user with the matching user ID.
+      tags:
+        - Users
+  /users/register:
+    post:
+      summary: Register
+      operationId: post-user-register
+      responses:
+        '201':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Missing Required Information
+        '500':
+          description: Internal Server Error
+      description: Create a new user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        description: The credentials use to create an user.
+      tags:
+        - Users
+    parameters: []
+  /users/login:
+    post:
+      summary: Login
+      operationId: post-users-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      description: Allow an user to log in the system.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCredential'
+        description: The username and password use to login.
+      tags:
+        - Users
+  /trips:
+    get:
+      summary: GetTrips
+      responses:
+        '200':
+          description: The list of all the trips
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripResponse'
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      operationId: get-trips
+      tags:
+        - Trips
+      description: Retrieve all the trips from the database
+    post:
+      summary: Create trip
+      operationId: post-trips
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripResponse'
+        '400':
+          description: Bad Request
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Server Error
+      description: Create a new trip for an user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripRequest'
+      tags:
+        - Trips
+  '/trips/{id}':
+    get:
+      summary: GetTripId
+      responses:
+        '200':
+          description: The requested trip
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripResponse'
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-trips-by-id
+      tags:
+        - Trips
+      description: Retrieve all information for a specific trip based on its id.
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+        description: The unique id of the trip
+components:
+  schemas:
+    UserInfo:
+      title: UserInfo
+      type: object
+      description: User informations
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+          description: The user first name
+        lastName:
+          type: string
+          description: The user last name.
+        email:
+          type: string
+          format: email
+          description: The user email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+          description: The user birth name in format MM/DD/YYYY
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+        phoneNumber:
+          type: string
+          description: International phone number of the user
+      required:
+        - firstName
+        - lastName
+        - email
+    UserCredential:
+      title: UserCredential
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user
+        password:
+          type: string
+          description: The password of the user not encrypted
+      required:
+        - username
+        - password
+    UserRegistration:
+      title: UserRegistration
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username that will be used to log in the system
+        password:
+          type: string
+          description: The password (not encrypted)
+        firstName:
+          type: string
+          description: The user's firstname
+        lastName:
+          type: string
+          description: The user's lastname
+        email:
+          type: string
+          format: email
+          description: The user's email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+          description: The user's date of birth (MM/DD/YYYY)
+      required:
+        - username
+        - password
+    TripResponse:
+      title: TripResponse
+      type: object
+      description: The informartions for a user's trip.
+      properties:
+        id:
+          type: string
+        userId:
+          type: integer
+          format: int64
+          description: The unique identifier of an user
+        title:
+          type: string
+          description: The title of the trip
+        creationDate:
+          type: string
+          description: The creation date of the trip
+        departureDateTime:
+          type: string
+          description: The datetime information of the departure
+        arrivalDateTime:
+          type: string
+          description: The datetime information of the arrival
+        travelType:
+          type: string
+          enum:
+            - FLIGHT
+            - TRAIN
+            - BOAT
+            - STARTSHIP
+          description: The type of travel of the trip
+        travelNumber:
+          type: string
+          description: The travel number of the trip
+        travelDestinationCountry:
+          type: string
+          description: The destination country of the travel
+        travelOriginCountry:
+          type: string
+          description: The origin country of the travel
+        travelDestinationTown:
+          type: string
+          description: The destination town of the travel
+        travelOriginCountryTown:
+          type: string
+          description: The origin town of the travel
+        isBusinessTrip:
+          type: string
+          description: Weither it is a business trip or not
+        numberOfTraveler:
+          type: number
+          description: Total number of travelers for the trip
+    TripRequest:
+      title: TripRequest
+      type: object
+      description: Basic object to create an user trip
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: The unique identifier of an user
+        title:
+          type: string
+          description: The title of the trip
+        creationDate:
+          type: string
+          description: The creation date of the trip
+        departureDateTime:
+          type: string
+          description: The datetime information of the departure
+        arrivalDateTime:
+          type: string
+          description: The datetime information of the arrival
+        travelType:
+          type: string
+          enum:
+            - FLIGHT
+            - TRAIN
+            - BOAT
+            - STARTSHIP
+          description: The type of travel of the trip
+        travelNumber:
+          type: string
+          description: The travel number of the trip
+        travelDestinationCountry:
+          type: string
+          description: The destination country of the travel
+        travelOriginCountry:
+          type: string
+          description: The origin country of the travel
+        travelDestinationTown:
+          type: string
+          description: The destination town of the travel
+        travelOriginCountryTown:
+          type: string
+          description: The origin town of the travel
+        isBusinessTrip:
+          type: string
+          description: Weither it is a business trip or not
+        numberOfTraveler:
+          type: number
+          description: Total number of travelers for the trip
+tags:
+  - name: Users
+  - name: Notifications
+  - name: Trips
