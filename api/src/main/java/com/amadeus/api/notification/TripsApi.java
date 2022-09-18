@@ -1,8 +1,9 @@
 package com.amadeus.api.notification;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.amadeus.api.notification.model.NotificationExceptionJson;
 import com.amadeus.api.notification.model.TripRequestJson;
 import com.amadeus.api.notification.model.TripResponseJson;
 
@@ -44,7 +46,9 @@ public interface TripsApi {
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = NotificationExceptionJson.class))
+            })
         }
     )
     @RequestMapping(
@@ -52,12 +56,9 @@ public interface TripsApi {
         value = "/trips",
         produces = { "application/json" }
     )
-    default ResponseEntity<TripResponseJson> getTrips(
+    ResponseEntity<List<TripResponseJson>> getTrips(
         
-    ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    );
 
 
     /**
@@ -80,7 +81,9 @@ public interface TripsApi {
             }),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = NotificationExceptionJson.class))
+            })
         }
     )
     @RequestMapping(
@@ -88,11 +91,9 @@ public interface TripsApi {
         value = "/trips/{id}",
         produces = { "application/json" }
     )
-    default ResponseEntity<TripResponseJson> getTripsById(
+    ResponseEntity<TripResponseJson> getTripsById(
         @Parameter(name = "id", description = "The unique id of the trip", required = true) @PathVariable("id") String id
-    ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
+    );
 
 
     /**
@@ -115,7 +116,9 @@ public interface TripsApi {
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = NotificationExceptionJson.class))
+            })
         }
     )
     @RequestMapping(
@@ -124,11 +127,8 @@ public interface TripsApi {
         produces = { "application/json" },
         consumes = { "application/json" }
     )
-    default ResponseEntity<TripResponseJson> postTrips(
+    ResponseEntity<TripResponseJson> postTrips(
         @Parameter(name = "TripRequest", description = "") @Valid @RequestBody(required = false) TripRequestJson tripRequest
-    ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
+    );
 
 }

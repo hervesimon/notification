@@ -1,9 +1,13 @@
 package com.amadeus.api.notification.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import javax.validation.Valid;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,14 +31,17 @@ public class TripResponseJson {
   @JsonProperty("title")
   private String title;
 
-  @JsonProperty("creationDate")
-  private String creationDate;
+    @JsonProperty("creationDate")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate creationDate;
 
-  @JsonProperty("departureDateTime")
-  private String departureDateTime;
+    @JsonProperty("departureDateTime")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime departureDateTime;
 
-  @JsonProperty("arrivalDateTime")
-  private String arrivalDateTime;
+    @JsonProperty("arrivalDateTime")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime arrivalDateTime;
 
   /**
    * The type of travel of the trip
@@ -156,7 +163,7 @@ public class TripResponseJson {
     this.title = title;
   }
 
-  public TripResponseJson creationDate(String creationDate) {
+  public TripResponseJson creationDate(LocalDate creationDate) {
     this.creationDate = creationDate;
     return this;
   }
@@ -167,15 +174,15 @@ public class TripResponseJson {
   */
   
   @Schema(name = "creationDate", description = "The creation date of the trip", required = false)
-  public String getCreationDate() {
+  public LocalDate getCreationDate() {
     return creationDate;
   }
 
-  public void setCreationDate(String creationDate) {
+  public void setCreationDate(LocalDate creationDate) {
     this.creationDate = creationDate;
   }
 
-  public TripResponseJson departureDateTime(String departureDateTime) {
+  public TripResponseJson departureDateTime(OffsetDateTime departureDateTime) {
     this.departureDateTime = departureDateTime;
     return this;
   }
@@ -186,15 +193,15 @@ public class TripResponseJson {
   */
   
   @Schema(name = "departureDateTime", description = "The datetime information of the departure", required = false)
-  public String getDepartureDateTime() {
+  public OffsetDateTime getDepartureDateTime() {
     return departureDateTime;
   }
 
-  public void setDepartureDateTime(String departureDateTime) {
+  public void setDepartureDateTime(OffsetDateTime departureDateTime) {
     this.departureDateTime = departureDateTime;
   }
 
-  public TripResponseJson arrivalDateTime(String arrivalDateTime) {
+  public TripResponseJson arrivalDateTime(OffsetDateTime arrivalDateTime) {
     this.arrivalDateTime = arrivalDateTime;
     return this;
   }
@@ -205,11 +212,11 @@ public class TripResponseJson {
   */
   
   @Schema(name = "arrivalDateTime", description = "The datetime information of the arrival", required = false)
-  public String getArrivalDateTime() {
+  public OffsetDateTime getArrivalDateTime() {
     return arrivalDateTime;
   }
 
-  public void setArrivalDateTime(String arrivalDateTime) {
+  public void setArrivalDateTime(OffsetDateTime arrivalDateTime) {
     this.arrivalDateTime = arrivalDateTime;
   }
 

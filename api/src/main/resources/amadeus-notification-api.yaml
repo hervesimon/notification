@@ -8,7 +8,7 @@ info:
     url: 'https://github.com/hervesimon/notification'
     email: herve.muludiki@gmail.com
 servers:
-  - url: /api
+  - url: /api/v1
 paths:
   '/users/{username}/trips':
     parameters:
@@ -33,11 +33,47 @@ paths:
           description: User Not Found
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       operationId: get-users-trips
       description: Retrieve the trips information of the user with the matching user ID.
       tags:
         - Users
         - Trips
+  '/users/{username}/notifications':
+    parameters:
+      - schema:
+          type: string
+        name: username
+        in: path
+        required: true
+        description: The unique identification of an user
+    get:
+      summary: Get User notifications
+      responses:
+        '200':
+          description: Trips Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+        '403':
+          description: Forbidden
+        '404':
+          description: User Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
+      operationId: get-users-notification
+      description: Retrieve the notifications information of the user with the matching user ID.
+      tags:
+        - Users
+        - Notifications
   '/users/{username}':
     parameters:
       - schema:
@@ -60,6 +96,10 @@ paths:
           description: User Not Found
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       operationId: get-users-by-userId
       description: Retrieve the information of the user with the matching user ID.
       tags:
@@ -79,6 +119,10 @@ paths:
           description: Missing Required Information
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       description: Create a new user.
       requestBody:
         content:
@@ -106,6 +150,10 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       description: Allow an user to log in the system.
       requestBody:
         content:
@@ -131,6 +179,10 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       operationId: get-trips
       tags:
         - Trips
@@ -151,6 +203,10 @@ paths:
           description: Forbidden
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       description: Create a new trip for an user
       requestBody:
         content:
@@ -175,6 +231,10 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationException'
       operationId: get-trips-by-id
       tags:
         - Trips
@@ -235,6 +295,7 @@ components:
       required:
         - username
         - password
+      description: User information to log in the system
     UserRegistration:
       title: UserRegistration
       type: object
@@ -263,6 +324,7 @@ components:
       required:
         - username
         - password
+      description: Basic user informations to register
     TripResponse:
       title: TripResponse
       type: object
@@ -365,6 +427,33 @@ components:
         numberOfTraveler:
           type: number
           description: Total number of travelers for the trip
+    Notification:
+      title: Notification
+      x-stoplight:
+        id: ypf957qs6tmeh
+      type: object
+      description: Notification data for an user
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique identification for a notification
+        description:
+          type: string
+          description: The description of the notification
+        creationDateTime:
+          type: string
+          description: The creation datetime of the notification
+    NotificationException:
+      title: MSExceptionDTO
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        contextParams:
+          type: object
 tags:
   - name: Users
   - name: Notifications
