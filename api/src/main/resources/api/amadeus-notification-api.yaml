@@ -8,7 +8,7 @@ info:
     url: 'https://github.com/hervesimon/notification'
     email: herve.muludiki@gmail.com
 servers:
-  - url: /api/v1
+  - url: /api
 paths:
   '/users/{username}/trips':
     parameters:
@@ -26,7 +26,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TripResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TripResponse'
         '403':
           description: Forbidden
         '404':
@@ -41,7 +43,6 @@ paths:
       description: Retrieve the trips information of the user with the matching user ID.
       tags:
         - Users
-        - Trips
   '/users/{username}/notifications':
     parameters:
       - schema:
@@ -58,7 +59,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Notification'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
         '403':
           description: Forbidden
         '404':
@@ -73,7 +76,6 @@ paths:
       description: Retrieve the notifications information of the user with the matching user ID.
       tags:
         - Users
-        - Notifications
   '/users/{username}':
     parameters:
       - schema:
@@ -172,7 +174,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TripResponse'
+                type: array
+                items:
+                  $ref: '#/components/schemas/TripResponse'
         '400':
           description: Bad Request
         '403':
@@ -342,12 +346,15 @@ components:
         creationDate:
           type: string
           description: The creation date of the trip
+          format: date
         departureDateTime:
           type: string
           description: The datetime information of the departure
+          format: date-time
         arrivalDateTime:
           type: string
           description: The datetime information of the arrival
+          format: date-time
         travelType:
           type: string
           enum:
@@ -392,12 +399,15 @@ components:
         creationDate:
           type: string
           description: The creation date of the trip
+          format: date
         departureDateTime:
           type: string
           description: The datetime information of the departure
+          format: date-time
         arrivalDateTime:
           type: string
           description: The datetime information of the arrival
+          format: date-time
         travelType:
           type: string
           enum:
@@ -444,6 +454,7 @@ components:
         creationDateTime:
           type: string
           description: The creation datetime of the notification
+          format: date-time
     NotificationException:
       title: MSExceptionDTO
       type: object

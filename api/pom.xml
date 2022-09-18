@@ -19,6 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <openapi-generator-maven-plugin.version>5.4.0</openapi-generator-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -39,4 +40,56 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+
+            <!-- Génération de code à partir de la définition openapi -->
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <configuration>
+                    <inputSpec>${project.basedir}/src/main/resources/api/api.yaml</inputSpec>
+                    <generatorName>spring</generatorName>
+                    <configOptions>
+                        <library>spring-boot</library>
+                        <interfaceOnly>true</interfaceOnly>
+                        <defaultInterfaces>false</defaultInterfaces>
+                        <useTags>true</useTags>
+                        <useOptional>false</useOptional>
+                        <openApiNullable>false</openApiNullable>
+                        <skipDefaultInterface>true</skipDefaultInterface>
+                    </configOptions>
+                    <modelNameSuffix>Json</modelNameSuffix>
+                    <generateSupportingFiles>false</generateSupportingFiles>
+                    <generateModels>true</generateModels>
+                    <generateModelTests>false</generateModelTests>
+                    <generateApis>true</generateApis>
+                    <generateApiTests>false</generateApiTests>
+                    <generateSupportingFiles>false</generateSupportingFiles>
+                    <generateApiDocumentation>false</generateApiDocumentation>
+                    <globalProperties>
+                        <skipFormModel>false</skipFormModel>
+                    </globalProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-from-openapi</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api/amadeus-notification-api.yaml</inputSpec>
+                            <modelPackage>com.amadeus.api.notification.model</modelPackage>
+                            <apiPackage>com.amadeus.api.notification</apiPackage>
+                        </configuration>
+
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
+
