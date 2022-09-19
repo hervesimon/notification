@@ -7,10 +7,9 @@
     <groupId>com.amadeus</groupId>
     <artifactId>notification</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <start-class>com.amadeus.app.NotificationRestApplication</start-class>
         <maven-jar-plugin.version>3.2.2</maven-jar-plugin.version>
         <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
@@ -20,9 +19,6 @@
         <springdoc.version>1.6.6</springdoc.version>
         <swagger-annotations.version>2.1.13</swagger-annotations.version>
         <swagger-annotations-v1.version>1.6.5</swagger-annotations-v1.version>
-
-        <!-- TESTS -->
-        <wiremock.version>2.32.0</wiremock.version>
 
         <!-- TEST E2E -->
         <spring-mock-mvc.version>5.0.0</spring-mock-mvc.version>
@@ -53,13 +49,14 @@
         <spring-boot-dependencies.version>2.6.6</spring-boot-dependencies.version>
         <jacoco.version>0.8.7</jacoco.version>
         <build-helper-maven-plugin.version>3.3.0</build-helper-maven-plugin.version>
+        <lombok.version>1.18.20</lombok.version>
 
     </properties>
     <modules>
-        <module>api</module>
-        <module>app</module>
         <module>domain</module>
         <module>infra</module>
+        <module>app</module>
+        <module>api</module>
     </modules>
 
     <dependencyManagement>
@@ -136,6 +133,19 @@
                 <type>pom</type>
                 <version>${spring-boot-dependencies.version}</version>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Starter for using Spring Security -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
             </dependency>
 
             <!-- junit bom -->
@@ -253,6 +263,13 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
@@ -260,28 +277,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Spring boot maven for multi module -->
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot-dependencies.version}</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>repackage</goal>
-                            </goals>
-                            <configuration>
-                                <classifier>exec</classifier>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>build-info</id>
-                            <goals>
-                                <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
 
                 <!-- Jacoco configuration -->
                 <plugin>
@@ -297,85 +292,6 @@
                             <exclude>**/fr/ugap/ms/**/*Application.java</exclude>
                         </excludes>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>before-unit-test-execution</id>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                            <configuration>
-                                <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>after-unit-test-execution</id>
-                            <phase>test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Sets the path to the file which contains the execution data. -->
-                                <dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
-                                <!-- Sets the output directory for the code coverage report. -->
-                                <outputDirectory>${project.build.directory}/coverage-reports/jacoco-ut</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>before-integration-test-execution</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>prepare-agent</goal>
-                            </goals>
-                            <configuration>
-                                <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>post-integration-test</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <!-- Sets the path to the file which contains the execution data. -->
-                                <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                                <!-- Sets the output directory for the code coverage report. -->
-                                <outputDirectory>${project.build.directory}/coverage-reports/jacoco-it</outputDirectory>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>merge-unit-and-integration</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>merge</goal>
-                            </goals>
-                            <configuration>
-                                <fileSets>
-                                    <fileSet>
-                                        <directory>${project.basedir}/</directory>
-                                        <includes>
-                                            <include>**/*ut.exec</include>
-                                            <include>**/*it.exec</include>
-                                        </includes>
-                                    </fileSet>
-                                </fileSets>
-                                <!--destFile>${sonar.jacoco.reportPath}</destFile-->
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>create-merged-report</id>
-                            <phase>post-integration-test</phase>
-                            <goals>
-                                <goal>report</goal>
-                            </goals>
-                            <configuration>
-                                <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                                <outputDirectory>
-                                    ${project.build.directory}/coverage-reports/jacoco-merged-test-coverage-report
-                                </outputDirectory>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <!-- TESTS UNITAIRES -->
@@ -443,19 +359,6 @@
                     <version>${maven-jar-plugin.version}</version>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>${build-helper-maven-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>parse-version</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
 
 

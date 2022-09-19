@@ -8,7 +8,7 @@ info:
     url: 'https://github.com/hervesimon/notification'
     email: herve.muludiki@gmail.com
 servers:
-  - url: /api
+  - url: /notification/api/v1
 paths:
   '/users/{username}/trips':
     parameters:
@@ -465,7 +465,11 @@ components:
           type: string
         contextParams:
           type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 tags:
   - name: Users
-  - name: Notifications
   - name: Trips

@@ -1,9 +1,11 @@
 spring:
   application:
-    name: cruncher
+    name: notification
   web:
     resources:
       static-locations: classpath:/api
+  main:
+    allow-bean-definition-overriding: true
 server:
   servlet:
     context-path: /notification
@@ -13,6 +15,11 @@ server:
     min-response-size: 1024
   http2:
     enabled: true
+security:
+  jwt:
+    token:
+      secret-key: amadeus-secret-key
+      expire-length: 300000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
 springdoc:
   version: '@springdoc.version@'
   api-docs:
